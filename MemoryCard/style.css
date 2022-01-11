@@ -103,9 +103,9 @@ body {
     justify-content: left;
     margin-left: 30px;
     font-size: 50px;
-    color: #fff;
+    color: rgb(172, 172, 172);
     font-weight: bold;
-    text-shadow: 0 0 10px black;
+    text-shadow: 0 0 1px black;
     transition: all 0.3s;
 }
 

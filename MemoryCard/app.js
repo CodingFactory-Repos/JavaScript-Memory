@@ -71,27 +71,34 @@ function generateGrid() {
 
 
     let grid = document.querySelector('#grille')
-    let Fruits = ["apple", "apple", "banana", "banana", "straw", "straw", "cherry", "cherry", "brocoli", "brocoli", "pepper", "pepper"];
+    let Sushis = ["Sushi1", "Sushi1", "Sushi2", "Sushi2", "Sushi3", "Sushi3", "Sushi4", "Sushi4", "Sushi5", "Sushi5", "Sushi6", "Sushi6"]
+    let Flowers = ["Flower1", "Flower1", "Flower2", "Flower2", "Flower3", "Flower3", "Flower4", "Flower4", "Flower5", "Flower5", "Flower6", "Flower6"]
+    let Dogs = ["Dog1", "Dog1", "Dog2", "Dog2", "Dog3", "Dog3", "Dog4", "Dog4", "Dog5", "Dog5", "Dog6", "Dog6"]
+    let Fruits = ["Fruits1", "Fruits1", "Fruits2", "Fruits2", "Fruits3", "Fruits3", "Fruits4", "Fruits4", "Fruits5", "Fruits5", "Fruits6", "Fruits6"];
+    let Birds = ["Bird1", "Bird1", "Bird2", "Bird2", "Bird3", "Bird3", "Bird4", "Bird4", "Bird5", "Bird5", "Bird6", "Bird6"];
+    let Cats = ["Cat1", "Cat1", "Cat2", "Cat2", "Cat3", "Cat3", "Cat4", "Cat4", "Cat5", "Cat5", "Cat6", "Cat6"];
+    let Decks = [Fruits, Cats, Dogs, Flowers, Birds, Sushis];
     window.addEventListener('load', () => {
 
 
+        let deck = Decks[Math.floor(Math.random() * Decks.length)]
         for (let i = 0; i < 12; i++) {
-            let fruit = Fruits[Math.floor(Math.random() * Fruits.length)];
-            let index = Fruits.indexOf(fruit);
-            Fruits.splice(index, 1);
-            fruit = fruit.replace(/['"]+/g, '')
+            let card = deck[Math.floor(Math.random() * deck.length)];
+            let index = deck.indexOf(card);
+            deck.splice(index, 1);
+            card = card.replace(/['"]+/g, '')
 
 
 
 
             grid.innerHTML += `  
-<div class = "carte" data-attr="${fruit}">
+<div class = "carte" data-attr="${card}">
     <div class = "double-face">
     <div class = "face">
-    <img src = "ressources/${fruit}.svg"></div> 
+    <img src = "ressources/${card}.png"></div> 
     <div class = "arriere" >
 </div>`
-            cards.push(fruit);
+            cards.push(card);
         }
 
     })
