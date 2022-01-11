@@ -13,44 +13,58 @@ let cards = [];
 // }
 
 
-function startTimer() {
-    let body = document.querySelector('body');
-    let time = 0;
-    let minutes = 0;
-    let hours = 0;
-    let timer = setInterval(() => {
-        time++;
-        document.querySelector('#timer').innerHTML = minutes + " : " + time;
 
-        if (time > 59) {
-            minutes++;
-            time = 0;
-        }
 
-        if (hours <= 0 && minutes < 10 && time < 10) {
-            document.querySelector('#timer').innerHTML = "0" + minutes + " : 0" + time;
-        } else if (hours <= 0 && minutes < 10 && time >= 10) {
-            document.querySelector('#timer').innerHTML = "0" + minutes + " : " + time;
-        } else if (hours <= 0 && minutes > 10 && time < 10) {
-            document.querySelector('#timer').innerHTML = minutes + " : 0" + time;
-        } else {
-            document.querySelector('#timer').innerHTML = minutes + " : " + time;
-        }
-        if (minutes > 59) {
-            hours++
-            minutes = 0;
-            time = 0
-        }
-        if (hours >= 1) {
-            document.querySelector('#timer').innerHTML = hours + " : " + minutes + " : " + time;
-        }
+function startTimer(active) {
+    if (active == true) {
+        let end = false;
+        if (!end) {
+            let body = document.querySelector('body');
+            let time = 0;
+            let minutes = 0;
+            let hours = 0;
+            let timer = setInterval(() => {
+                time++;
+                document.querySelector('#timer').innerHTML = minutes + " : " + time;
 
-    }, 1);
+                if (time > 59) {
+                    minutes++;
+                    time = 0;
+                }
 
-    body.innerHTML += `
+                if (hours <= 0 && minutes < 10 && time < 10) {
+                    document.querySelector('#timer').innerHTML = "0" + minutes + " : 0" + time;
+                } else if (hours <= 0 && minutes < 10 && time >= 10) {
+                    document.querySelector('#timer').innerHTML = "0" + minutes + " : " + time;
+                } else if (hours <= 0 && minutes > 10 && time < 10) {
+                    document.querySelector('#timer').innerHTML = minutes + " : 0" + time;
+                } else {
+                    document.querySelector('#timer').innerHTML = minutes + " : " + time;
+                }
+                if (minutes > 59) {
+                    hours++
+                    minutes = 0;
+                    time = 0
+                }
+                if (hours >= 1) {
+                    document.querySelector('#timer').innerHTML = hours + " : " + minutes + " : " + time;
+                }
+            }, 1000);
+
+
+            body.innerHTML += `
     <div id="timer">
     <p>${timer}</p>
     </div>`
+        }
+    } else {
+        let body = document.querySelector('body');
+        let timer = document.querySelector('#timer');
+        body.removeChild(timer);
+        end = true;
+    }
+
+
 }
 
 function generateGrid() {
@@ -149,21 +163,33 @@ async function play() {
             }, 900);
         }
 
+        setTimeout(() => {
+            if (cards.length == 0 && !end) {
 
-        if (cards.length == 0 && !end) {
-            console.log('You won !');
 
-            body.innerHTML += `  
+
+                body.innerHTML += `
+                <div id="end">
+                <div id="CONGRATS">
+                <h1>Congrats !</h1>
+                </div>
+                <div>
+                <p>You won in a time of ${document.querySelector('#timer').innerHTML}</p>
+                </div>`
+
+                startTimer(false);
+
+
+                body.innerHTML += `  
             <button class="btnRestart">Restart a Game</button>`
 
-            document.removeEventListener('click', play)
-            end = true;
-        }
+                document.removeEventListener('click', play)
+                end = true;
+            }
+        }, 1000);
 
 
     })
-
-
 
 
     // Retourner une carte 
@@ -183,7 +209,7 @@ async function play() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    startTimer();
+    startTimer(true);
     generateGrid();
     play();
 });
