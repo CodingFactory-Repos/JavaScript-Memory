@@ -1,5 +1,6 @@
 let cards = [];
 
+
 // function randomFruit() {
 //     // Choisir un fruit au hasard
 //     let fruit = Fruits[Math.floor(Math.random() * Fruits.length)];
@@ -70,6 +71,9 @@ function startTimer(active) {
 function generateGrid() {
 
 
+
+
+
     let grid = document.querySelector('#grille')
     let Sushis = ["Sushi1", "Sushi1", "Sushi2", "Sushi2", "Sushi3", "Sushi3", "Sushi4", "Sushi4", "Sushi5", "Sushi5", "Sushi6", "Sushi6"]
     let Flowers = ["Flower1", "Flower1", "Flower2", "Flower2", "Flower3", "Flower3", "Flower4", "Flower4", "Flower5", "Flower5", "Flower6", "Flower6"]
@@ -95,7 +99,7 @@ function generateGrid() {
 <div class = "carte" data-attr="${card}">
     <div class = "double-face">
     <div class = "face">
-    <img src = "ressources/${card}.png"></div> 
+    <img src = "ressources/decks/${card}.png"></div> 
     <div class = "arriere" >
 </div>`
             cards.push(card);
@@ -153,6 +157,8 @@ async function play() {
                 cardAttr = [];
 
             } else if (cardFlipped.length === 2 & cardAttr[0] === cardAttr[1]) {
+                let Right = new Audio('ressources/Sound/Nice.mp3');
+                Right.play();
 
                 // console.log(cardFlipped[0].parentNode.getAttribute('data-attr'));
                 // console.log(cardFlipped[1].parentNode.getAttribute('data-attr'));
@@ -203,15 +209,30 @@ async function play() {
     async function flip(card) {
         //retourne une carte
         card.classList.toggle("active");
+        let flip = new Audio('ressources/Sound/Flip.mp3');
+        flip.play();
     }
 
     async function notMatch(card1, card2) {
-        // Retourne les cartes après 3 secondes
+        // Retourne les cartes après 1 secondes
+        setTimeout(() => {
+            let Wrong = new Audio('ressources/Sound/Wrong.mp3');
+            Wrong.play();
+        }, 500);
         setTimeout(() => {
             card1.classList.toggle("active");
             card2.classList.toggle("active");
+
         }, 1000);
     }
+}
+
+async function returnEveryCard() {
+    // return every card
+    let cards = document.querySelectorAll('.double-face');
+    cards.forEach(card => {
+        card.classList.toggle("active");
+    });
 }
 
 
@@ -223,6 +244,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 document.addEventListener('click', (e) => {
     if (e.target.classList.contains('btnRestart')) {
-        location.reload();
+        returnEveryCard();
+        setTimeout(() => {
+            location.reload();
+        }, 500);
     }
 });
