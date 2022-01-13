@@ -247,6 +247,6 @@ document.addEventListener('click', (e) => {
         returnEveryCard();
         setTimeout(() => {
             location.reload();
-        }, 500);
+        }, 180);
     }
 });
