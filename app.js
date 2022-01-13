@@ -1,5 +1,11 @@
 let cards = [];
 let cardAlreadyDiscovered = [];
+let end = false;
+let Music = new Audio('ressources/Sound/MusicMemory.mp3');
+Music.volume = 0.2;
+Music.loop = true;
+let miracleRun = 0;
+
 
 
 
@@ -23,86 +29,79 @@ let cardAlreadyDiscovered = [];
 
 function startTimer(active) {
 
+
     // If active is true, start the timer
     if (active == true) {
 
-        // Set the end of the timer to false
 
-        let end = false;
+        // Set the timer to 0
+        let body = document.querySelector('body');
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
 
-        // If it's not the end
-        if (!end) {
+        // Increase the timer by 1 second every second
+        let timer = setInterval(() => {
 
-            // Set the timer to 0
-            let body = document.querySelector('body');
-            let seconds = 0;
-            let minutes = 0;
-            let hours = 0;
+            seconds++;
 
-            // Increase the timer by 1 second every second
-            let timer = setInterval(() => {
-                seconds++;
+            // Set the timer to the body
+            document.querySelector('#timer').innerHTML = "00 : 00";
 
-                // Set the timer to the body
+            // If the seconds is equal to 60
+            if (seconds > 59) {
+                // Increase the minute by 1
+                minutes++;
+                // Set the seconds to 0
+                seconds = 0;
+            }
+
+            // If the minutes are inferior to 10, and seconds inferior to 10, print a 0 before seconds and minutes
+            if (hours == 0 && minutes < 10 && seconds < 10) {
+                document.querySelector('#timer').innerHTML = "0" + minutes + " : 0" + seconds;
+
+                // If the minutes are inferior to 10, and seconds superior to 10, print a 0 before minutes
+            } else if (hours == 0 && minutes < 10 && seconds >= 10) {
+                document.querySelector('#timer').innerHTML = "0" + minutes + " : " + seconds;
+
+                // If the minutes are superior to 10 and the seconds inferior to 10, print a 0 before seconds
+            } else if (hours == 0 && minutes > 10 && seconds < 10) {
+                document.querySelector('#timer').innerHTML = minutes + " : 0" + seconds;
+
+                // Print no 0 if none of the previous conditions are true
+            } else {
                 document.querySelector('#timer').innerHTML = minutes + " : " + seconds;
+            }
 
-                // If the seconds is equal to 60
-                if (seconds > 59) {
-                    // Increase the minute by 1
-                    minutes++;
-                    // Set the seconds to 0
-                    seconds = 0;
-                }
+            // If the minutes are equel to 60 increase the hour counter by 1
+            if (minutes > 59) {
+                hours++
+                minutes = 0;
+            }
 
-                // If the minutes are inferior to 10, and seconds inferior to 10, print a 0 before seconds and minutes
-                if (hours == 0 && minutes < 10 && seconds < 10) {
-                    document.querySelector('#timer').innerHTML = "0" + minutes + " : 0" + seconds;
-
-                    // If the minutes are inferior to 10, and seconds superior to 10, print a 0 before minutes
-                } else if (hours == 0 && minutes < 10 && seconds >= 10) {
-                    document.querySelector('#timer').innerHTML = "0" + minutes + " : " + seconds;
-
-                    // If the minutes are superior to 10 and the seconds inferior to 10, print a 0 before seconds
-                } else if (hours == 0 && minutes > 10 && seconds < 10) {
-                    document.querySelector('#timer').innerHTML = minutes + " : 0" + seconds;
-
-                    // Print no 0 if none of the previous conditions are true
-                } else {
-                    document.querySelector('#timer').innerHTML = minutes + " : " + seconds;
-                }
-
-                // If the minutes are equel to 60 increase the hour counter by 1
-                if (minutes > 59) {
-                    hours++
-                    minutes = 0;
-                }
-
-                // If the hours are superior to 1, print the hours
-                if (hours >= 1) {
-                    document.querySelector('#timer').innerHTML = hours + " : " + minutes + " : " + seconds;
-                }
-            }, 1000);
+            // If the hours are superior to 1, print the hours
+            if (hours >= 1) {
+                document.querySelector('#timer').innerHTML = hours + " : " + minutes + " : " + seconds;
+            }
+        }, 1000);
 
 
-            // Update the timer on the html
+        // Update the timer on the html
 
-            body.innerHTML += `
+        body.innerHTML += `
         <div id="timer">
         <p>${timer}</p>
         </div>`
-        }
 
-        // If timer is stopped
     } else {
+        // If active is false, stop the timer and delete it from the html
+        clearInterval(timer);
+        Music.pause();
+        // Hide the pause button and the play button
 
-        // Remove the timer from the body and put end on true
-        let body = document.querySelector('body');
-        let timer = document.querySelector('#timer');
-        body.removeChild(timer);
-        end = true;
+        document.querySelector('#timer').remove();
+
     }
-
-
 }
 
 //--------------------------------------------//
@@ -158,7 +157,7 @@ function generateGrid() {
         }
 
     })
-
+    console.log(cards)
 }
 
 //--------------------------------------------//
@@ -235,9 +234,12 @@ async function play() {
                 } else if (cards.length > 2) {
                     setTimeout(() => {
                         let What = new Audio('ressources/Sound/What.mp3');
+                        What.volume = 0.5;
+                        miracleRun++;
                         What.play();
                     }, 500);
                 } else {
+                    miracleRun++;
                     let Right = new Audio('ressources/Sound/Nice.mp3');
                     Right.play();
                 }
@@ -289,12 +291,23 @@ async function play() {
 
 
                 // Play the sound of victory
-                let Victory = new Audio('ressources/Sound/DreamingHarp.mp3');
-                Victory.play();
+                if (miracleRun == 6) {
+                    let epicWin = new Audio('ressources/Sound/CongratsEpic.mp3');
+                    epicWin.play();
+                } else {
+                    let Victory = new Audio('ressources/Sound/DreamingHarp.mp3');
+                    Victory.play();
+                }
 
                 // Print a button restart
                 body.innerHTML += `  
                 <button class="btnRestart">Restart a Game</button>`
+
+                // Let the pause and the start button be on top of the restart button
+                document.querySelector('#start').style.top = '85%';
+                document.querySelector('#stop').style.top = '85%';
+                document.querySelector('#start').style.opacity = '0';
+                document.querySelector('#stop').style.opacity = '0';
 
                 document.removeEventListener('click', play)
                 end = true;
@@ -388,9 +401,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Generate the grid
     generateGrid();
 
-    let Music = new Audio('ressources/Sound/MusicMemory.mp3');
-    Music.volume = 0.2;
-
     // Start the main music when button play is pressed
     document.querySelector('#start').addEventListener('click', () => {
         // If music does not exist create it and play it
@@ -405,6 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Stop the main music when button stop is pressed
     document.querySelector('#stop').addEventListener('click', () => {
+        console.log('stop');
         Music.pause();
         document.querySelector('#start').style.opacity = '1';
         document.querySelector('#stop').style.opacity = '0';
