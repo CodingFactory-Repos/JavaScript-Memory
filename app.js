@@ -1,4 +1,5 @@
 let cards = [];
+let cardAlreadyDiscovered = [];
 
 
 // function randomFruit() {
@@ -157,14 +158,34 @@ async function play() {
                 cardAttr = [];
 
             } else if (cardFlipped.length === 2 & cardAttr[0] === cardAttr[1]) {
-                let Right = new Audio('ressources/Sound/Nice.mp3');
-                Right.play();
+
+                if (cardAlreadyDiscovered.includes(cardAttr[0] || cardAttr[1])) {
+                    console.log(cards)
+                    let Right = new Audio('ressources/Sound/Nice.mp3');
+                    Right.play();
+                } else if (cards.length > 2) {
+                    setTimeout(() => {
+                        let What = new Audio('ressources/Sound/What.mp3');
+                        What.play();
+                    }, 500);
+                } else {
+                    let Right = new Audio('ressources/Sound/Nice.mp3');
+                    Right.play();
+                }
 
                 // console.log(cardFlipped[0].parentNode.getAttribute('data-attr'));
                 // console.log(cardFlipped[1].parentNode.getAttribute('data-attr'));
 
                 cards.splice(cards.indexOf(cardFlipped[0].parentNode.getAttribute('data-attr')), 1);
                 cards.splice(cards.indexOf(cardFlipped[1].parentNode.getAttribute('data-attr')), 1);
+                if (cardAlreadyDiscovered.includes(cardAttr[0])) {
+                    cardAlreadyDiscovered.push(cardAttr[1]);
+                } else if (cardAlreadyDiscovered.includes(cardAttr[1])) {
+                    cardAlreadyDiscovered.push(cardAttr[0]);
+                } else {
+                    cardAlreadyDiscovered.push(cardAttr[0]);
+                    cardAlreadyDiscovered.push(cardAttr[1]);
+                }
 
                 console.log(cards);
                 cardFlipped = [];
@@ -191,6 +212,9 @@ async function play() {
                 </div>`
 
                 startTimer(false);
+
+                let Victory = new Audio('ressources/Sound/DreamingHarp.mp3');
+                Victory.play();
 
 
                 body.innerHTML += `  
@@ -224,6 +248,9 @@ async function play() {
             card2.classList.toggle("active");
 
         }, 1000);
+        cardAlreadyDiscovered.push(card1.parentNode.getAttribute('data-attr'));
+        cardAlreadyDiscovered.push(card2.parentNode.getAttribute('data-attr'));
+        console.log(cardAlreadyDiscovered);
     }
 }
 
@@ -239,6 +266,9 @@ async function returnEveryCard() {
 document.addEventListener("DOMContentLoaded", () => {
     startTimer(true);
     generateGrid();
+    let Music = new Audio('ressources/Sound/MusicMemory.mp3');
+    Music.volume = 0.2;
+    Music.play();
     play();
 });
 
