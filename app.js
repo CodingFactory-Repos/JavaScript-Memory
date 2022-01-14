@@ -133,9 +133,10 @@ function generateGrid() {
 
         // Generate a randomizer to chose our deck
         let deck = Decks[Math.floor(Math.random() * Decks.length)]
+        let deckSize = deck.length
 
         // Place the cards of the selected deck into the grid
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < deckSize; i++) {
             let card = deck[Math.floor(Math.random() * deck.length)];
             let index = deck.indexOf(card);
             deck.splice(index, 1);
